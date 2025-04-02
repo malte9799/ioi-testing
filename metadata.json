@@ -1,0 +1,10 @@
+{
+	"name": "ioi-testing",
+	"description": "A QOL mod for TrappedMC",
+	"creator": "9799ms",
+	"author": "9799ms",
+	"version": "0.0.1",
+	"git_repository": "https://github.com/malte9799/ioi-testing",
+	"entry": "index.js",
+	"requires": ["PogData"]
+}
