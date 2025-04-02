@@ -11,7 +11,7 @@ const Long = Java.type('java.lang.Long');
 const Channels = Java.type('java.nio.channels.Channels');
 
 export function loadMeta() {
-	return JSON.parse(FileLib.getUrlContent(`https://api.github.com/repos/${metadata.author}/${metadata.name}/releases/latest`));
+	return JSON.parse(FileLib.getUrlContent(`https://api.github.com/repos/${metadata.creator}/${metadata.name}/releases/latest`));
 }
 
 export function getVersion(meta) {

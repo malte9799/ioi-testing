@@ -1,8 +1,8 @@
 /// <reference types="../CTAutocomplete" />
 /// <reference lib="es2015" />
 
-import * as Updater from './updater';
 import metadata from './metadata';
+import * as Updater from './updater';
 import tabcompletion from './utils/tabcompletion';
 
 const isDev = true;
@@ -14,6 +14,7 @@ function tryUpdate(delay = 0) {
 		const meta = Updater.loadMeta();
 		const version = Updater.getVersion(meta);
 		if (Updater.compareVersions(version, metadata.version) <= 0) return -1; // Already up to date
+		if (delay > 0) Thread.sleep(delay);
 		const url = Updater.getAssetURL(meta);
 		try {
 			Updater.downloadUpdate(url);
@@ -21,19 +22,21 @@ function tryUpdate(delay = 0) {
 			if (isDev) log('failed to download update:', e, e.stack);
 			else log('failed to download update');
 			console.log(e + '\n' + e.stack);
-			new TextComponent({ text: ChatLib.getCenteredText('&nClick to Manually Update'), clickEvent: { action: 'open_url', value: `https://github.com/${metadata.author}/${metadata.name}/releases/latest` } }).chat();
+			new TextComponent({ text: ChatLib.getCenteredText('&nClick to Manually Update'), clickEvent: { action: 'open_url', value: `https://github.com/${metadata.creator}/${metadata.name}/releases/latest` } }).chat();
 
 			return 1;
 		}
+
+		// TODO: Better Chat Messages!
 		log('Update Found!');
-		new TextComponent({ text: ChatLib.getCenteredText('Click to View on Github'), clickEvent: { action: 'open_url', value: `https://github.com/${metadata.author}/${metadata.name}/releases/latest` } }).chat();
-		new TextComponent({ text: ChatLib.getCenteredText('Click to Print Changelog'), clickEvent: { action: 'run_command', value: '/ioi viewChangelog' } }).chat();
+		new TextComponent({ text: ChatLib.getCenteredText('Click to View on Github'), clickEvent: { action: 'open_url', value: `https://github.com/${metadata.creator}/${metadata.name}/releases/latest` } }).chat();
+		new TextComponent({ text: ChatLib.getCenteredText('Click to Print Changelog'), clickEvent: { action: 'run_command', value: `/${metadata.name} viewChangelog` } }).chat();
 		log(ChatLib.getCenteredText(`§4${metadata.version} -> ${version}`));
 		log('');
 		if (!isDev) log(ChatLib.getCenteredText('§c§lNote: Your CT Modules will be reloaded.'));
 		else log(ChatLib.getCenteredText('§c§lNote: IOI will be reloaded'));
+		new TextComponent(new TextComponent({ text: '§a[UPDATE]', clickEvent: { action: 'run_command', value: `/${metadata.name} update accept` } }), new TextComponent({ text: '§4[CANCLE]', clickEvent: { action: 'run_command', value: `/${metadata.name} update deny` } })).chat();
 
-		new TextComponent(new TextComponent({ text: '§a[UPDATE]', clickEvent: { action: 'run_command', value: '/ioi update accept' } }), new TextComponent({ text: '§4[CANCLE]', clickEvent: { action: 'run_command', value: '/ioi update deny' } })).chat();
 		return 0;
 	} catch (e) {
 		if (isDev) log('failed to fetch update:', e, e.stack);
@@ -76,7 +79,7 @@ register('command', (...args) => {
 				const typeSort = ['feat', 'del', 'change', 'fix', 'misc'];
 				changelog.forEach(({ version, changes }, i) => {
 					if (i > 0) ChatLib.chat('');
-					ChatLib.chat(centerMessage('&3&lv' + version));
+					ChatLib.chat(ChatLib.getCenteredText('&3&lv' + version));
 					changes.sort((a, b) => typeSort.indexOf(a.type) - typeSort.indexOf(b.type)).forEach(({ type, desc }) => ChatLib.chat(typeColors[type] + desc));
 				});
 			} catch (e) {
@@ -84,10 +87,10 @@ register('command', (...args) => {
 			}
 	}
 })
-	.setName('ioi-testing')
 	.setTabCompletions(
 		tabcompletion({
 			update: [],
 			viewChangelog: [],
 		})
-	);
+	)
+	.setName('ioi-testing');
