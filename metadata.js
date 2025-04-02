@@ -1,1 +1,1 @@
-export const metadata = JSON.parse(FileLib.read('ioi', 'metadata.json'));
+export default metadata = JSON.parse(FileLib.read('ioi', 'metadata.json'));
