@@ -93,4 +93,4 @@ register('command', (...args) => {
 			viewChangelog: [],
 		})
 	)
-	.setName('ioi-testing');
+	.setName(metadata.name);
