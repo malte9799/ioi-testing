@@ -93,7 +93,7 @@ jobs:
 
         This is a prerelease version." `
           --prerelease `
-          ./ioi.zip
+          ./ioi-testing.zip
       shell: pwsh
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
