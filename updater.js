@@ -1,4 +1,5 @@
-import metadata from './metadata';
+import Logger from './utils/Logger';
+const metadata = JSON.parse(FileLib.read('ioi-testing', 'metadata.json'));
 
 const File = Java.type('java.io.File');
 const FileOutputStream = Java.type('java.io.FileOutputStream');
@@ -7,7 +8,15 @@ const Long = Java.type('java.lang.Long');
 const Channels = Java.type('java.nio.channels.Channels');
 
 export function loadMeta() {
-	return JSON.parse(FileLib.getUrlContent(`https://api.github.com/repos/${metadata.creator}/${metadata.name}/releases/latest`));
+	try {
+		// https://github.com/malte9799/ioi-testing
+		// const url = metadata.git_repository.replace('github.com', 'api.github.com/repos') + '/releases';
+
+		if (!Logger.isDev()) return JSON.parse(FileLib.getUrlContent(`https://api.github.com/repos/${metadata.creator}/${metadata.name}/releases/latest`));
+		return JSON.parse(FileLib.getUrlContent(`https://api.github.com/repos/${metadata.creator}/${metadata.name}/releases`))[0];
+	} catch (/** @type {Java.type("java.io.FileNotFoundException")} */ e) {
+		return null;
+	}
 }
 
 export function getVersion(meta) {
@@ -60,20 +69,30 @@ export function downloadUpdate(url) {
 }
 
 export function getChangelogDiff(cv) {
-	if (!FileLib.exists(rel('temp/changelog.json'))) return [];
-	const changelog = JSON.parse(FileLib.read(rel('temp/changelog.json'))).data;
+	const temp = FileLib.exists(rel('temp/changelog.json'));
+	const changelog = JSON.parse(FileLib.read(rel(temp ? 'temp/changelog.json' : 'changelog.json'))).data.reverse();
 	const i = changelog.findIndex((v) => v.version === cv);
-	if (i >= 0) return changelog.slice(i + 1);
-	return changelog;
+	if (i < 0) return changelog;
+	if (temp) return changelog.slice(i + 1);
+	else return [changelog[i]];
 }
 
 export function applyUpdate(sev) {
+	if (!Logger.isDev()) deleteOld();
 	copy(new File(rel('temp')), new File(rel('')));
 	deleteDownload();
 }
 
 export function deleteDownload() {
 	rimraf(rel('temp'));
+}
+
+function deleteOld() {
+	const files = new File(rel('')).listFiles();
+	files.forEach((file) => {
+		if (file.getName() == 'data') return;
+		rimraf(file);
+	});
 }
 
 function rimraf(src) {

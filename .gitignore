@@ -1,5 +1,0 @@
-*.log
-\!*.txt
-\!perf
-ioi-testing.zip
-.vscode

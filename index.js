@@ -1,96 +1,101 @@
 /// <reference types="../CTAutocomplete" />
 /// <reference lib="es2015" />
 
-import metadata from './metadata';
-import * as Updater from './updater';
-import tabcompletion from './utils/tabcompletion';
+if (!global.ioi) global.ioi = {};
+global.ioi.onGameUnload = new Set();
+register('gameUnload', () => {
+	global.ioi.onGameUnload.forEach((func) => func());
+	global.ioi = {};
+});
 
-const isDev = true;
+new Sound({ source: 'ui.loom.select_pattern', category: Sound.Category.MASTER, pitch: 1.5, volume: 0.4 }).play();
+new Sound({ source: 'ui.toast.in', category: Sound.Category.MASTER, pitch: 1.5, volume: 2 }).play();
 
-const log = (...args) => ChatLib.chat('§7[§6ioi§7]§r ' + args.join(' '));
+const Color = Java.type('java.awt.Color');
+// import metadata from './metadata';
+// import * as Updater from './updater';
+// import tabcompletion from './utils/tabcompletion';
+import { Category, Group, ToggleOption, TickBoxOption, NumberOption, ColorOption, TextOption, SliderOption } from './settings/Options';
 
-function tryUpdate(delay = 0) {
-	try {
-		const meta = Updater.loadMeta();
-		const version = Updater.getVersion(meta);
-		if (Updater.compareVersions(version, metadata.version) <= 0) return -1; // Already up to date
-		if (delay > 0) Thread.sleep(delay);
-		const url = Updater.getAssetURL(meta);
-		try {
-			Updater.downloadUpdate(url);
-		} catch (e) {
-			if (isDev) log('failed to download update:', e, e.stack);
-			else log('failed to download update');
-			console.log(e + '\n' + e.stack);
-			new TextComponent({ text: ChatLib.getCenteredText('&nClick to Manually Update'), clickEvent: { action: 'open_url', value: `https://github.com/${metadata.creator}/${metadata.name}/releases/latest` } }).chat();
+// new Category('General', 'General Description');
+// new Group('Updates', 'General', 'Group Description');
+new ToggleOption({
+	value: true,
+	name: 'Toggle Option',
+	description: 'Toggle Option Description',
+	category: 'General',
+	group: 'Updates',
+});
+new TickBoxOption({
+	value: true,
+	name: 'Tickbox Option',
+	description: 'Tickbox Option Description',
+	category: 'General',
+	group: 'Updates',
+});
+// new ColorOption({
+// 	value: new Color(1, 0, 0),
+// 	name: 'Color Option',
+// 	description: 'Color Option Description',
+// 	category: 'General',
+// 	group: 'Updates',
+// });
+// new TextOption({
+// 	value: 'Text Option Value',
+// 	name: 'Text Option',
+// 	description: 'Text Option Description',
+// 	category: 'General',
+// });
 
-			return 1;
+// new ToggleOption({
+// 	value: true,
+// 	name: 'Chamber Title',
+// 	description: "Shows a Titles when you 'Sence a Chamber nearby...'",
+// 	category: 'Mining',
+// 	group: 'Chambers',
+// });
+// new ToggleOption({
+// 	value: true,
+// 	name: 'Activation Sound',
+// 	description: 'Playes a Sound when you get Hast from SB',
+// 	category: 'Mining',
+// 	group: 'Speed Breaker',
+// });
+// new ToggleOption({
+// 	value: true,
+// 	name: 'Cooldown',
+// 	description: 'Displays the Cooldown the SuperBreaker Abbility',
+// 	category: 'Mining',
+// 	group: 'Super Breaker',
+// });
+// new ToggleOption({
+// 	value: true,
+// 	name: 'Smart Check',
+// 	description: 'Clancels the activation of SB when the mine is about to reset',
+// 	category: 'Mining',
+// 	group: 'Super Breaker',
+// });
+
+const featureFiles = getAllFeatureFiles('./config/ChatTriggers/modules/ioi-testing/features');
+featureFiles.forEach((feature) => {
+	require('./features/' + feature);
+});
+
+function getAllFeatureFiles(directory) {
+	const dir = new java.io.File(directory);
+	const result = [];
+
+	function traverse(folder, parentPath = '') {
+		const files = folder.listFiles();
+		if (files == null) return;
+		for (let i = 0; i < files.length; i++) {
+			const file = files[i];
+			const fileName = file.getName();
+			const filePath = parentPath ? `${parentPath}/${fileName}` : fileName;
+			if (file.isDirectory()) traverse(file, filePath);
+			else if (fileName.endsWith('.js')) result.push(filePath);
 		}
-
-		// TODO: Better Chat Messages!
-		log('Update Found!');
-		new TextComponent({ text: ChatLib.getCenteredText('Click to View on Github'), clickEvent: { action: 'open_url', value: `https://github.com/${metadata.creator}/${metadata.name}/releases/latest` } }).chat();
-		new TextComponent({ text: ChatLib.getCenteredText('Click to Print Changelog'), clickEvent: { action: 'run_command', value: `/${metadata.name} viewChangelog` } }).chat();
-		log(ChatLib.getCenteredText(`§4${metadata.version} -> ${version}`));
-		log('');
-		if (!isDev) log(ChatLib.getCenteredText('§c§lNote: Your CT Modules will be reloaded.'));
-		else log(ChatLib.getCenteredText('§c§lNote: IOI will be reloaded'));
-		new TextComponent(new TextComponent({ text: '§a[UPDATE]', clickEvent: { action: 'run_command', value: `/${metadata.name} update accept` } }), new TextComponent({ text: '§4[CANCLE]', clickEvent: { action: 'run_command', value: `/${metadata.name} update deny` } })).chat();
-
-		return 0;
-	} catch (e) {
-		if (isDev) log('failed to fetch update:', e, e.stack);
-		else log('failed to fetch update');
-		console.log(e + '\n' + e.stack);
 	}
-	return -1;
+	traverse(dir);
+	return result;
 }
-
-register('command', (...args) => {
-	switch (args[0]) {
-		case 'update':
-			switch (args[1]) {
-				case 'accept':
-					Updater.applyUpdate();
-					ChatLib.command('ct load');
-					// isDev ? ChatLib.command('ioi reload') : ChatLib.command('ct load');
-					break;
-				case 'deny':
-					Updater.deleteDownload();
-					break;
-				default:
-					new Thread(() => {
-						if (tryUpdate() === -1) log('You are up to date!');
-					}).start();
-					break;
-			}
-			break;
-		case 'viewChangelog':
-			try {
-				/** @type {{ version: string, changes: { type: 'feat' | 'fix' | 'misc' | 'del' | 'change', desc: string }[] }[]} */
-				const changelog = Updater.getChangelogDiff(metadata.version).reverse();
-				const typeColors = {
-					feat: '&a+ feat: ',
-					fix: '&f= fix: ',
-					misc: '&7= misc: ',
-					change: '&6/ change: ',
-					del: '&4- remove: ',
-				};
-				const typeSort = ['feat', 'del', 'change', 'fix', 'misc'];
-				changelog.forEach(({ version, changes }, i) => {
-					if (i > 0) ChatLib.chat('');
-					ChatLib.chat(ChatLib.getCenteredText('&3&lv' + version));
-					changes.sort((a, b) => typeSort.indexOf(a.type) - typeSort.indexOf(b.type)).forEach(({ type, desc }) => ChatLib.chat(typeColors[type] + desc));
-				});
-			} catch (e) {
-				log('&4failed to get changelog, is the update downloaded?');
-			}
-	}
-})
-	.setTabCompletions(
-		tabcompletion({
-			update: [],
-			viewChangelog: [],
-		})
-	)
-	.setName(metadata.name);

@@ -1,4 +1,4 @@
 {
-	"$schema": "./changelog.schema.json",
+	"$schema": "./heper/changelog.schema.json",
 	"data": []
 }
