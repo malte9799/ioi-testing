@@ -53,11 +53,19 @@ jobs:
         working-directory: ./helper/export
         run: run.bat
 
+      - name: Force update prerelease Git tag
+        shell: bash
+        run: |
+          git tag -d prerelease || echo "Local tag 'prerelease' did not exist or was already deleted."
+          git tag prerelease ${{ github.sha }}
+          echo "Updating remote tag 'prerelease' to point to ${{ github.sha }}"
+          git push origin refs/tags/prerelease --force
+
       - name: Create or Update Prerelease
         uses: softprops/action-gh-release@v2
         with:
           tag_name: prerelease
-          name: Latest Prerelease # Name des Prereleases
+          name: Latest Prerelease
           body: |
             This prerelease was automatically generated and contains the latest changes.
 
