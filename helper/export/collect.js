@@ -19,8 +19,7 @@ let f = (_) => {
 		} else {
 			files.push(p.slice(startingPath.length));
 			const key = path.dirname(p.slice(startingPath.length));
-			if (!dirs[key]) dirs[key] = 0;
-			dirs[key]++;
+			dirs[key] = (dirs[key] || 0) + 1;
 		}
 	});
 };

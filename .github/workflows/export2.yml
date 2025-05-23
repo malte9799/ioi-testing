@@ -42,4 +42,4 @@ jobs:
             Artefakt: ioi-testing.zip
           draft: false
           prerelease: true
-          files: ./helper/export/ioi-testing.zip
+          files: .ioi-testing.zip
