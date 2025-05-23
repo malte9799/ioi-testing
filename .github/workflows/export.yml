@@ -1,15 +1,15 @@
-name: Export and Create Prerelease
-
+name: 2 Export and Create Prerelease
 on:
   workflow_dispatch:
-  #   push:
-  #     branches: [main, master]
+#   push:
+#     branches: [main, master]
 
 permissions:
   contents: write
 
 jobs:
-  export-and-release:
+  build_and_prerelease:
+    name: Build and Create/Update Prerelease
     runs-on: windows-latest
 
     steps:
@@ -18,85 +18,54 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Setup Node.js
+      - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '18'
 
-      - name: Install 7-Zip
-        run: |
-          choco install 7zip -y
+      - name: Get Current Date
+        id: get_date
+        run: echo "date_string=$(Get-Date -Format 'dd-MM-yyyy HH:mm:ss UTC')" >> $env:GITHUB_OUTPUT
         shell: pwsh
+
+      - name: Determine Comparison Range for Changes
+        id: comparison_info
+        run: |
+          LATEST_SEM_TAG=$(git tag -l "v[0-9]*.[0-9]*.[0-9]*" --sort=-v:refname | head -n 1)
+          REPO_URL="https://github.com/${{ github.repository }}"
+
+          if [ -z "$LATEST_SEM_TAG" ]; then
+            echo "Kein semantischer Release-Tag für den Vergleich gefunden."
+            if [ "${{ github.event_name }}" == "push" ] && [ "${{ github.event.before }}" != "0000000000000000000000000000000000000000" ]; then
+              CHANGES_LINE="Changes in this push: ${REPO_URL}/compare/${{ github.event.before }}...${{ github.sha }}"
+            else
+              CHANGES_LINE="Changes up to commit: ${REPO_URL}/commit/${{ github.sha }}"
+            fi
+          else
+            echo "Letzter semantischer Tag: $LATEST_SEM_TAG"
+            CHANGES_LINE="Changes since ${LATEST_SEM_TAG}: ${REPO_URL}/compare/${LATEST_SEM_TAG}...${{ github.sha }}"
+          fi
+          echo "changes_display_line=$CHANGES_LINE" >> $GITHUB_OUTPUT
+        shell: bash
 
       - name: Run export script
-        run: |
-          cd helper/export
-          call run.bat
         shell: cmd
+        working-directory: ./helper/export
+        run: run.bat
 
-      - name: Check if ioi-testing.zip was created
-        run: |
-          if (Test-Path "ioi-testing.zip") {
-            Write-Host "ioi-testing.zip found successfully"
-            $size = (Get-Item "ioi-testing.zip").Length
-            Write-Host "File size: $([math]::Round($size/1KB, 2)) KB"
-          } else {
-            Write-Host "Error: ioi-testing.zip not found"
-            Write-Host "Contents of root directory:"
-            Get-ChildItem -Name
-            Write-Host "Contents of helper/export directory:"
-            Get-ChildItem . -Name
-            exit 1
-          }
-        shell: pwsh
+      - name: Create or Update Prerelease
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: prerelease
+          name: Latest Prerelease # Name des Prereleases
+          body: |
+            This prerelease was automatically generated and contains the latest changes.
 
-      - name: Check for existing prerelease
-        id: check_prerelease
-        run: |
-          $releases = gh release list --json tagName,isPrerelease | ConvertFrom-Json
-          $prerelease = $releases | Where-Object { $_.isPrerelease -eq $true } | Select-Object -First 1
-
-          if ($prerelease) {
-            echo "existing_tag=$($prerelease.tagName)" >> $env:GITHUB_OUTPUT
-            echo "has_prerelease=true" >> $env:GITHUB_OUTPUT
-            echo "Found existing prerelease: $($prerelease.tagName)"
-          } else {
-            echo "has_prerelease=false" >> $env:GITHUB_OUTPUT
-            echo "existing_tag=v0.0.1-prerelease" >> $env:GITHUB_OUTPUT
-            echo "No existing prerelease found"
-          }
-        shell: pwsh
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Delete existing prerelease if exists
-        if: steps.check_prerelease.outputs.has_prerelease == 'true'
-        run: |
-          gh release delete ${{ steps.check_prerelease.outputs.existing_tag }} --yes
-          git push --delete origin ${{ steps.check_prerelease.outputs.existing_tag }} 2>$null || true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Create/recreate prerelease tag
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git tag ${{ steps.check_prerelease.outputs.existing_tag }}
-          git push origin ${{ steps.check_prerelease.outputs.existing_tag }}
-
-      - name: Create prerelease
-        run: |
-          gh release create ${{ steps.check_prerelease.outputs.existing_tag }} `
-            --title "${{ steps.check_prerelease.outputs.existing_tag }} (Prerelease)" `
-            --notes "Automated prerelease created from commit ${{ github.sha }}
-
-          ## Latest Export
-          - Updated build from latest changes
-          - Generated: $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss UTC')
-
-          This is a prerelease version." `
-            --prerelease `
-            ./ioi-testing.zip
-        shell: pwsh
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            ## Latest Export
+            - Generated: ${{ steps.get_date.outputs.date_string }}
+            - Latest commit: [`${{ github.sha }}`](https://github.com/${{ github.repository }}/commit/${{ github.sha }})
+            - ${{ steps.comparison_info.outputs.changes_display_line }}
+            - Branch: `${{ github.ref_name }}`
+          draft: false
+          prerelease: true
+          files: ./helper/export/ioi-testing.zip
