@@ -1,16 +1,15 @@
-import { join } from 'path';
-import { readdirSync, writeFileSync } from 'fs';
+const path = require('path');
+const fs = require('fs');
 const src = __dirname;
-const ignore = ['.vscode', 'ioi-testing.zip', '.gitignore', '.git'];
+const ignore = ['.vscode', 'ioi.zip', '.gitignore', '.git', '.github', 'docs', 'data', 'dev', 'helper'];
 
 const files = [];
 const dirs = [];
 let f = (_) => {
-	readdirSync(_, { withFileTypes: true }).forEach((v) => {
+	fs.readdirSync(_, { withFileTypes: true }).forEach((v) => {
 		if (ignore.includes(v.name)) return;
 		if (v.name.startsWith('!')) return;
-		let p = join(_, v.name);
-		let s = join(src, p);
+		let p = path.join(_, v.name);
 		if (v.isDirectory()) {
 			dirs.push(p);
 			f(p);
@@ -19,10 +18,10 @@ let f = (_) => {
 };
 f('.');
 
-writeFileSync('./!files.txt', files.join('\n'));
-writeFileSync('./!dirs.txt', dirs.join('\n'));
+fs.writeFileSync('./!files.txt', files.join('\n'));
+fs.writeFileSync('./!dirs.txt', dirs.join('\n'));
 
-export default {
+module.exports = {
 	files,
 	dirs,
 };
