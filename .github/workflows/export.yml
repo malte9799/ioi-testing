@@ -1,4 +1,4 @@
-name: 2 Export and Create Prerelease
+name: Export and Create Prerelease
 on:
   workflow_dispatch:
 #   push:
