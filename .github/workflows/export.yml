@@ -65,7 +65,6 @@ jobs:
             - Generated: ${{ steps.get_date.outputs.date_string }}
             - Latest commit: [`${{ github.sha }}`](https://github.com/${{ github.repository }}/commit/${{ github.sha }})
             - ${{ steps.comparison_info.outputs.changes_display_line }}
-            - Branch: `${{ github.ref_name }}`
           draft: false
           prerelease: true
-          files: ./helper/export/ioi-testing.zip
+          files: ioi-testing.zip

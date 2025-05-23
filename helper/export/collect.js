@@ -8,7 +8,6 @@ const files = [];
 const dirs = {};
 let f = (_) => {
 	fs.readdirSync(_, { withFileTypes: true }).forEach((v) => {
-		console.dir(v);
 		if (ignore.includes(v.name)) return;
 		if (v.name.startsWith('!')) return;
 		let p = path.join(_, v.name);
