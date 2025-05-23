@@ -1,4 +1,4 @@
-name: Build and Create Prerelease
+name: 2 Export and Create Prerelease
 on:
   workflow_dispatch:
 #   push:
@@ -21,11 +21,6 @@ jobs:
         with:
           node-version: '18'
 
-      #   - name: Install 7-Zip
-      #     run: |
-      #       choco install 7zip -y
-      #     shell: pwsh
-
       - name: Run export script
         shell: cmd
         working-directory: ./helper/export
@@ -42,4 +37,4 @@ jobs:
             Artefakt: ioi-testing.zip
           draft: false
           prerelease: true
-          files: .ioi-testing.zip
+          files: ioi-testing.zip
