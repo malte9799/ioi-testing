@@ -1,7 +1,7 @@
 const path = require('path');
 const fs = require('fs');
 const src = __dirname;
-const ignore = ['.vscode', 'ioi-testing.zip', '.gitignore', '.git', '.github', 'helper'];
+const ignore = ['.vscode', 'ioi-testing.zip', '.gitignore', '.git', '.github', 'helper', 'dev'];
 
 const startingPath = '../../';
 const files = [];

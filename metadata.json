@@ -5,5 +5,5 @@
 	"version": "0.0.1",
 	"entry": "ioi.js",
 	"git_repository": "https://github.com/malte9799/ioi-testing",
-	"requires": ["PogData"]
+	"requires": []
 }
