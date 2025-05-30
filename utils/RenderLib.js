@@ -25,6 +25,20 @@ export default class RenderLib {
 	static getPositionMatrix() {
 		return Renderer.matrixStack.toMC().peek().positionMatrix;
 	}
+	static getScreenPos() {
+		const screen = Player.getContainer()?.getScreen();
+		if (!screen || !(screen instanceof net.minecraft.client.gui.screen.ingame.HandledScreen)) return new Vec3i(0, 0, 0);
+		return new Vec3i(screen.x, screen.y, 0);
+	}
+	static getScreenSize() {
+		const screen = Player.getContainer()?.getScreen();
+		if (!screen || !(screen instanceof net.minecraft.client.gui.screen.ingame.HandledScreen)) return new Vec3i(0, 0, 0);
+		const center = new Vec3i(Renderer.screen.getWidth() / 2, Renderer.screen.getHeight() / 2, 0);
+		return center.translated(-screen.x, -screen.y, 0).scaled(2);
+	}
+	static getTextRenderer() {
+		return Renderer.getFontRenderer();
+	}
 }
 
 export class Render2D {
@@ -56,7 +70,7 @@ export class Render2D {
 		ChatLib.addColor(text)
 			.split(NEWLINE_REGEX)
 			.forEach((line, i) => {
-				TextRenderer.draw(line, 0, yOffset, color, shadow, RendererUtils.getPositionMatrix(), VertexConsumers, TextLayerType.NORMAL, backgroundColor, light);
+				TextRenderer.draw(line, 0, yOffset, color, shadow, RenderLib.getPositionMatrix(), VertexConsumers, TextLayerType.NORMAL, backgroundColor, light);
 				yOffset += TextRenderer.fontHeight;
 			});
 		Renderer.popMatrix();
@@ -89,8 +103,82 @@ export class Render2D {
 			.popMatrix();
 	}
 }
-export class Render3D {}
+export class Render3D {
+	static drawBox({ start = new Vec3i(0, 0, 0), size = new Vec3i(1, 1, 1), end = undefined, color = Renderer.WHITE, depth = true, filled = true } = {}) {
+		if (end) size = end.minus(start);
+		color = Renderer.fixAlpha(color);
 
+		Renderer.pushMatrix().translate(start.getX(), start.getY(), start.getZ());
+		// Renderer.pushMatrix().translate(start.getX() - Client.camera.getX(), start.getY() - Client.camera.getY(), start.getZ() - Client.camera.getZ());
+
+		Renderer.disableCull().enableBlend().depthMask(false);
+		if (depth) Renderer.enableDepth();
+
+		const dx = size.x;
+		const h = size.y;
+		const dz = size.z;
+
+		Renderer3d.begin(filled ? Renderer.DrawMode.QUADS : Renderer.DrawMode.LINE_STRIP, Renderer.VertexFormat.POSITION_COLOR)
+			.pos(dx, 0, dz)
+			.color(color)
+			.pos(dx, 0, 0)
+			.color(color)
+			.pos(0, 0, 0)
+			.color(color)
+			.pos(0, 0, dz)
+			.color(color)
+
+			.pos(dx, h, dz)
+			.color(color)
+			.pos(dx, h, 0)
+			.color(color)
+			.pos(0, h, 0)
+			.color(color)
+			.pos(0, h, dz)
+			.color(color)
+
+			.pos(0, h, dz)
+			.color(color)
+			.pos(0, h, 0)
+			.color(color)
+			.pos(0, 0, 0)
+			.color(color)
+			.pos(0, 0, dz)
+			.color(color)
+
+			.pos(dx, h, dz)
+			.color(color)
+			.pos(dx, h, 0)
+			.color(color)
+			.pos(dx, 0, 0)
+			.color(color)
+			.pos(dx, 0, dz)
+			.color(color)
+
+			.pos(dx, h, 0)
+			.color(color)
+			.pos(0, h, 0)
+			.color(color)
+			.pos(0, 0, 0)
+			.color(color)
+			.pos(dx, 0, 0)
+			.color(color)
+
+			.pos(0, h, dz)
+			.color(color)
+			.pos(dx, h, dz)
+			.color(color)
+			.pos(dx, 0, dz)
+			.color(color)
+			.pos(0, 0, dz)
+			.color(color);
+
+		Renderer3d.draw();
+
+		if (depth) Renderer.disableDepth();
+		Renderer.enableCull().disableBlend().depthMask(true).popMatrix();
+	}
+}
 export class Align {
 	static TOP_LEFT = 'TOP_LEFT';
 	static TOP = 'TOP_CENTER';
@@ -101,4 +189,16 @@ export class Align {
 	static BOTTOM_LEFT = 'BOTTOM_LEFT';
 	static BOTTOM = 'BOTTOM_CENTER';
 	static BOTTOM_RIGHT = 'BOTTOM_RIGHT';
+	constructor(x, y, z = null) {
+		x = x.toUpperCase();
+		y = y.toUpperCase();
+		z = z ? z.toUpperCase() : null;
+		if (!this.validate(x)) throw new Error('Invalid x: ' + x);
+		if (!this.validate(y)) throw new Error('Invalid y: ' + y);
+		if (z && !this.validate(z)) throw new Error('Invalid z: ' + z);
+		return `${x}_${y}${z ? '_' + z : ''}`;
+	}
+	validate(e) {
+		return ['TOP', 'LEFT', 'CENTER', 'RIGHT', 'BOTTOM'].includes(e.toUpperCase());
+	}
 }

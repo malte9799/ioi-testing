@@ -1,0 +1,454 @@
+[
+    {
+        "name": "",
+        "displayName": "",
+        "dimension": "minecraft:",
+        "bounds": [
+            {
+                "min": [],
+                "max": []
+            }
+        ]
+    },
+    {
+        "name": "a",
+        "dimension": "minecraft:spawn",
+        "bounds": [
+            {
+                "min": [
+                    -2,
+                    38,
+                    -87
+                ],
+                "max": [
+                    24,
+                    61,
+                    -61
+                ]
+            }
+        ]
+    },
+    {
+        "name": "fishing",
+        "dimension": "minecraft:spawn",
+        "bounds": [
+            {
+                "min": [
+                    -61,
+                    51,
+                    60
+                ],
+                "max": [
+                    33,
+                    101,
+                    150
+                ]
+            }
+        ]
+    },
+    {
+        "name": "pfish",
+        "displayName": "Presige Fishing",
+        "dimension": "minecraft:spawn",
+        "bounds": [
+            {
+                "min": [
+                    -47,
+                    46,
+                    150
+                ],
+                "max": [
+                    24,
+                    101,
+                    353
+                ]
+            }
+        ]
+    },
+    {
+        "name": "1k-fishing",
+        "displayName": "Fishing mcMMO 1,000",
+        "dimension": "minecraft:spawn",
+        "bounds": [
+            {
+                "min": [
+                    -159,
+                    51,
+                    60
+                ],
+                "max": [
+                    -61,
+                    101,
+                    151
+                ]
+            }
+        ]
+    },
+    {
+        "name": "crates",
+        "displayName": "Crates Room",
+        "dimension": "minecraft:spawn",
+        "bounds": [
+            {
+                "min": [
+                    87,
+                    61,
+                    -18
+                ],
+                "max": [
+                    124,
+                    75,
+                    19
+                ]
+            }
+        ]
+    },
+    {
+        "name": "enchanting",
+        "dimension": "minecraft:spawn",
+        "bounds": [
+            {
+                "min": [
+                    176,
+                    60,
+                    -18
+                ],
+                "max": [
+                    213,
+                    75,
+                    19
+                ]
+            }
+        ]
+    },
+    {
+        "name": "wood",
+        "dimension": "minecraft:spawn",
+        "bounds": [
+            {
+                "min": [
+                    -2,
+                    42,
+                    -177
+                ],
+                "max": [
+                    25,
+                    62,
+                    -150
+                ]
+            }
+        ]
+    },
+    {
+        "name": "smelting",
+        "dimension": "minecraft:spawn",
+        "bounds": [
+            {
+                "min": [
+                    29,
+                    61,
+                    -235
+                ],
+                "max": [
+                    85,
+                    85,
+                    -200
+                ]
+            }
+        ]
+    },
+    {
+        "name": "shop",
+        "displayName": "Server Shop",
+        "dimension": "minecraft:spawn",
+        "bounds": [
+            {
+                "min": [
+                    82,
+                    60,
+                    -109
+                ],
+                "max": [
+                    129,
+                    93,
+                    -46
+                ]
+            }
+        ]
+    },
+    {
+        "name": "pig",
+        "displayName": "Pig Spawners",
+        "dimension": "minecraft:spawn",
+        "bounds": [
+            {
+                "min": [
+                    -50,
+                    61,
+                    -139
+                ],
+                "max": [
+                    -13,
+                    79,
+                    -98
+                ]
+            }
+        ]
+    },
+    {
+        "name": "resource",
+        "dimension": "minecraft:spawn",
+        "bounds": [
+            {
+                "min": [
+                    -131,
+                    6,
+                    -133
+                ],
+                "max": [
+                    -4,
+                    14,
+                    -104
+                ]
+            }
+        ]
+    },
+    {
+        "name": "tutorial",
+        "dimension": "minecraft:spawn",
+        "bounds": [
+            {
+                "min": [
+                    -190,
+                    55,
+                    -13
+                ],
+                "max": [
+                    -26,
+                    87,
+                    16
+                ]
+            },
+            {
+                "min": [
+                    -148,
+                    53,
+                    -57
+                ],
+                "max": [
+                    -117,
+                    87,
+                    58
+                ]
+            }
+        ]
+    },
+    {
+        "name": "warps",
+        "dimension": "minecraft:spawn",
+        "bounds": [
+            {
+                "min": [
+                    25,
+                    62,
+                    -25
+                ],
+                "max": [
+                    41,
+                    79,
+                    -12
+                ]
+            }
+        ]
+    },
+    {
+        "name": "buycraft",
+        "dimension": "minecraft:spawn",
+        "bounds": [
+            {
+                "min": [
+                    21,
+                    62,
+                    13
+                ],
+                "max": [
+                    41,
+                    83,
+                    39
+                ]
+            }
+        ]
+    },
+    {
+        "name": "trader",
+        "dimension": "minecraft:spawn",
+        "bounds": [
+            {
+                "min": [
+                    56,
+                    62,
+                    -23
+                ],
+                "max": [
+                    66,
+                    68,
+                    -10
+                ]
+            }
+        ]
+    },
+    {
+        "name": "courtyard",
+        "dimension": "minecraft:spawn",
+        "bounds": [
+            {
+                "min": [
+                    84,
+                    60,
+                    53
+                ],
+                "max": [
+                    174,
+                    78,
+                    133
+                ]
+            }
+        ]
+    },
+    {
+        "name": "koth",
+        "displayName": "KOTH",
+        "dimension": "minecraft:spawn",
+        "bounds": [
+            {
+                "min": [
+                    81,
+                    61,
+                    140
+                ],
+                "max": [
+                    175,
+                    101,
+                    235
+                ]
+            }
+        ]
+    },
+    {
+        "name": "conquest",
+        "dimension": "minecraft:spawn",
+        "bounds": [
+            {
+                "min": [
+                    24,
+                    60,
+                    244
+                ],
+                "max": [
+                    104,
+                    101,
+                    305
+                ]
+            }
+        ]
+    },
+    {
+        "name": "p1-2",
+        "displayName": "P1 (2)",
+        "dimension": "minecraft:mines",
+        "bounds": [
+            {
+                "min": [
+                    6092,
+                    18,
+                    8201
+                ],
+                "max": [
+                    6197,
+                    128,
+                    8248
+                ]
+            }
+        ]
+    },
+    {
+        "name": "p1-1",
+        "displayName": "P1 (1)",
+        "dimension": "minecraft:mines",
+        "bounds": [
+            {
+                "min": [
+                    -58,
+                    18,
+                    8201
+                ],
+                "max": [
+                    47,
+                    128,
+                    8248
+                ]
+            }
+        ]
+    },
+    {
+        "name": "p1-3",
+        "displayName": "P1 (3)",
+        "dimension": "minecraft:mines",
+        "bounds": [
+            {
+                "min": [
+                    6092,
+                    18,
+                    10249
+                ],
+                "max": [
+                    6197,
+                    128,
+                    10296
+                ]
+            }
+        ]
+    },
+    {
+        "name": "eventmine",
+        "dimension": "minecraft:mines",
+        "bounds": [
+            {
+                "min": [
+                    4042,
+                    85,
+                    12297
+                ],
+                "max": [
+                    4151,
+                    130,
+                    12346
+                ]
+            },
+            {
+                "min": [
+                    -54,
+                    85,
+                    12297
+                ],
+                "max": [
+                    55,
+                    130,
+                    12346
+                ]
+            },
+            {
+                "min": [
+                    1994,
+                    85,
+                    12297
+                ],
+                "max": [
+                    2103,
+                    130,
+                    12346
+                ]
+            }
+        ]
+    }
+]

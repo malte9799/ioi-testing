@@ -1,3 +1,5 @@
+// IMPORTANT: This Updater will be replaced soon
+
 import Logger from './utils/Logger';
 const metadata = JSON.parse(FileLib.read('ioi-testing', 'metadata.json'));
 

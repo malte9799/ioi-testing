@@ -1,0 +1,20 @@
+{
+    "buttons": [
+        {
+            "text": "Condense",
+            "command": "condense"
+        },
+        {
+            "text": "Uncondense",
+            "command": "uncondense"
+        },
+        {
+            "text": "Sell All",
+            "command": "sellall"
+        },
+        {
+            "text": "Vault",
+            "command": "pv"
+        }
+    ]
+}

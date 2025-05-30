@@ -2,6 +2,9 @@ const HandledScreenMixin = new Mixin('net.minecraft.client.gui.screen.ingame.Han
 HandledScreenMixin.widenField('x');
 HandledScreenMixin.widenField('y');
 
+const ScreenMixin = new Mixin('net.minecraft.client.gui.screen.Screen');
+ScreenMixin.widenMethod('addDrawableChild');
+
 const IntPropertyMixin = new Mixin('net.minecraft.state.property.IntProperty');
 IntPropertyMixin.widenField('min');
 IntPropertyMixin.widenField('max');
@@ -9,7 +12,7 @@ IntPropertyMixin.widenField('max');
 const ClientPlayerInteractionManagerMixin = new Mixin('net.minecraft.client.network.ClientPlayerInteractionManager');
 export const ClientPlayerInteractionManager_breakBlock = ClientPlayerInteractionManagerMixin.inject({
 	at: new At('HEAD'),
-	method: 'breakBlock',
+	method: 'breakBlock(Lnet/minecraft/util/math/BlockPos;)Z',
 	locals: new Local({
 		type: 'Lnet/minecraft/util/math/BlockPos;',
 		index: 1,

@@ -1,11 +1,19 @@
 const LogType = Java.type('com.chattriggers.ctjs.engine.LogType');
+const Color = Java.type('java.awt.Color');
+
+const ConsoleColors = {
+	DEBUG: new Color(0.7, 0.7, 0.7),
+	INFO: new Color(1, 1, 1),
+	WARN: new Color(1, 0.75, 0.33),
+	ERROR: new Color(1, 0.25, 0.28),
+};
 
 class LoggerClass {
 	constructor() {
 		this.devs = ['a305d4d6bec04983ab0a356a45ae849d'];
 		this.loglevel = this.isDev() ? 4 : 3; //0=none, 1=error, 2=warn, 3=info, 4=debug
-		this.logPrefixes = ['[E]', '[W]', '[I]', '[D]'];
-		this.chatPrefix = '[ioi] &7';
+		this.logPrefixes = '[ioi] ';
+		this.chatPrefix = '&8[&6&lioi&8]&r ';
 
 		this.debugChannels = new Set();
 		this.activeDebugChannels = new Set();
@@ -24,30 +32,35 @@ class LoggerClass {
 		return this.devs.includes(UUID.toString().replace(/-/g, ''));
 	}
 
-	log(msg) {
-		Console.println(msg, LogType.INFO);
+	log(...msg) {
+		msg = msg.length == 1 ? msg[0] : msg.join(' ');
+		Console.println(this.logPrefixes + msg, LogType.INFO, '\n', ConsoleColors.INFO);
 	}
-	chat(msg) {
-		ChatLib.chat(msg);
+	chat(...msg) {
+		msg = msg.length == 1 ? msg[0] : msg.join(' ');
+		ChatLib.chat(this.chatPrefix + msg);
 	}
-	error(msg) {
+	error(...msg) {
 		if (this.loglevel < 1) return;
-		Console.println(msg, LogType.ERROR);
+		msg = msg.length == 1 ? msg[0] : msg.join(' ');
+		Console.println(this.logPrefixes + msg, LogType.ERROR, '\n', ConsoleColors.ERROR);
 	}
-	warn(msg) {
+	warn(...msg) {
 		if (this.loglevel < 2) return;
-		Console.println(msg, LogType.WARN);
+		msg = msg.length == 1 ? msg[0] : msg.join(' ');
+		Console.println(this.logPrefixes + msg, LogType.WARN, '\n', ConsoleColors.WARN);
 	}
 	info(...msg) {
 		if (this.loglevel < 3) return;
-		if (msg.length == 1) Console.println('[INFO] ' + msg[0], LogType.INFO);
-		else Console.println(`[INFO:${msg[0]}] ${msg[1]}`, LogType.INFO);
+		msg = msg.length == 1 ? msg[0] : msg.join(' ');
+		Console.println(this.logPrefixes + msg, LogType.INFO, '\n', ConsoleColors.INFO);
 	}
 	debug(...msg) {
 		if (this.loglevel < 4) return;
-		if (msg.length == 1) Console.println('[DEBUG] ' + msg[0], LogType.INFO);
-		else Console.println(`[DEBUG:${msg[0]}] ${msg[1]}`, LogType.INFO);
+		msg = msg.length == 1 ? msg[0] : msg.join(' ');
+		Console.println(this.logPrefixes + msg, LogType.INFO, '\n', ConsoleColors.DEBUG);
 	}
+	report(error) {}
 	reportableError(error, desc) {
 		const text = new TextComponent().withChatLineId();
 		const id = text.getChatLineId();
