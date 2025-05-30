@@ -7,16 +7,16 @@
 [3]: https://minecraft.wiki/images/Invicon_Fishing_Rod.png
 [4]: https://minecraft.wiki/images/Invicon_Compass.gif
 
-|     | Name                                      | Short description                                                | default On |
-| --- | ----------------------------------------- | ---------------------------------------------------------------- | ---------- |
-| ✅  | [Afk](#afk)                               | Automatically afk after a minute of inactivity                   | ✓          |
-| ✅  | [Auction](#auction)                       | Displays usefull Infos in the Auction Gui                        | ✓          |
-| ✅  | [Clock](#clock)                           | Displays the current time in the Scoreboard                      | ✓          |
-| ✅  | [Crate Cooldown](#crate-cooldown)         | Displays a 30-second cooldown on a crates when you find one.     | ✓          |
-| ✅  | [Easy Claim](#easy-claim)                 | Highlights claimable items in `/rewards`                         | ✓          |
-| ✅  | [Gang Member Status](#gang-member-status) | Displays the status of your gang members. `Online, AFK, Offline` | ✓          |
-| ✅  | [Mcmmo](#mcmmo)                           |                                                                  | ✓          |
-|     |                                           |                                                                  |            |
+|     | Name                                      | Short description                                             | default On |
+| --- | ----------------------------------------- | ------------------------------------------------------------- | ---------- |
+| ✅  | [Afk](#afk)                               | Automatically afk after a minute of inactivity                | ✓          |
+| ✅  | [Auction](#auction)                       | Price per unit / Sort mode display                            | ✓          |
+| ✅  | [Clock](#clock)                           | Adds a Clock to the Scoreboard                                | ✓          |
+| ✅  | [Crate Cooldown](#crate-cooldown)         | 30-second cooldown on a crates when you find one.             | ✓          |
+| ✅  | [Easy Claim](#easy-claim)                 | Highlights claimable items in `/rewards`                      | ✓          |
+| ✅  | [Gang Member Status](#gang-member-status) | Shows the status of your gang members. `Online, AFK, Offline` | ✓          |
+| ✅  | [Mcmmo](#mcmmo)                           | Aliblity Cooldown / Next Level time Estimate                  | ✓          |
+|     |                                           |                                                               |            |
 
 <sub>✅: Finished | 🚧: Work in progress | 🔜: Planned</sub>
 
@@ -92,7 +92,7 @@
 
 - Displays the status of your gang members. (Only works for your own gang)
 
-  > [!IMPORTANT] This only works for your own gang.
+  :warning: **This only works for your own gang**
 
   ![Preview](https://i.imgur.com/ktwEEZR.png)
 
